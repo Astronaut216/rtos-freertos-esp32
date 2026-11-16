@@ -7,14 +7,14 @@ Báo cáo: [`../03_Reports/Report_Project_CaNhan_FreeRTOS_24119055.pdf`](../03_R
 
 ## Phần cứng (kit chạy thật: ESP32 DevKit WROOM-32, env esp32dev, COM5)
 
-| Linh kiện | ESP32-S3 | ESP32 thường (env esp32dev) |
-|---|---|---|
-| LED1 / LED2 / LED3 (+220 Ω) | GPIO4 / 5 / 6 | GPIO19 / 18 / 23 |
-| BTN1 / BTN2 (nối GND, pull-up trong) | GPIO15 / 16 | GPIO4 / 13 |
-| Module cảm biến ánh sáng (AO) | GPIO1 (ADC1_CH0) | GPIO35 (quang trở lên 3V3, 10 kΩ xuống GND) |
-| OLED SSD1306 I2C 0x3C | SDA 10, SCL 11 | SDA 32, SCL 33 |
+| Linh kiện | Chân ESP32 |
+|---|---|
+| LED1 / LED2 / LED3 (+220 Ω) | GPIO19 / 18 / 23 |
+| BTN1 / BTN2 (nối GND, pull-up trong) | GPIO4 / 13 |
+| Quang trở chia áp (quang trở lên 3V3, 10 kΩ xuống GND) | GPIO35 (ADC1_CH7) |
+| OLED SSD1306 I2C 0x3C | SDA 32, SCL 33 |
 
-Kit + testboard dùng chung với nhóm (GV cho phép) nên chân giống mạch hiện có, nạp vào là chạy. Đổi chân trong `include/config.h`. Mạch chia áp quang trở tự ráp (LDR lên 3V3) thì đặt `LDR_INVERT 0`.
+Kit + testboard dùng chung với nhóm (GV cho phép). Đổi chân trong `include/config.h`. Mạch chia áp quang trở (LDR lên 3V3) dùng `LDR_INVERT 0`.
 
 ## Task
 
@@ -28,20 +28,19 @@ Kit + testboard dùng chung với nhóm (GV cho phép) nên chân giống mạch
 | T6 oled | 0 | 1 | 500 ms | mutex, critical section, xEventGroupWaitBits |
 | T7 control | 0 | 2 | chờ queue set | queue lệnh + queue set, suspend/resume/prio, stack monitor |
 | T8 alarm | 0 | 3 | chờ notification | xTaskNotifyWait |
-| timer | daemon | – | 10 s | software timer → give semaphore cho Task 7 |
+| timer | daemon | – | 2 s | software timer → give semaphore cho Task 7 |
 
 Mọi task gọi `xEventGroupSync` ở đầu nên cùng xuất phát. Log: mỗi task tự in, Serial được bảo vệ bằng recursive mutex `g_serialMutex`. Mỗi kỹ thuật đánh dấu `[K1]`..`[K14]` trong code, bảng tra ở đầu `src/main.cpp`.
 
 ## Chạy
 
-1. VS Code + PlatformIO, mở thư mục này, chọn env `esp32s3`. Build ✓ → Upload → → Serial Monitor 115200.
+1. VS Code + PlatformIO, mở thư mục này, chọn env `esp32dev`. Build ✓ → Upload → → Serial Monitor 115200.
 2. Gõ lệnh trong Serial Monitor: `help`, `stat`, `light`, `give`, `s 1` / `r 1` (dừng / chạy lại LED1), `p 6 2` (đổi priority Task 6).
 3. Không có kit: F1 → *Wokwi: Start Simulator* (`diagram.json`).
-4. Nạp sẵn không cần build: `prebuilt/firmware_esp32s3_factory.bin` ở địa chỉ 0x0 (ESP Web Flasher / esptool).
 
 Ghi chú:
 - Đường dẫn có dấu ("ĐỢT 2") làm ld trên Windows lỗi → `platformio.ini` build ra `C:\Users\<tên>\.pio_build\rtos_24119055`; `scripts/copy_fw.py` chép firmware về `.pio/wokwi/` cho Wokwi.
-- Cắm cổng USB gốc (không phải cổng UART) thì đổi `-DARDUINO_USB_CDC_ON_BOOT=1`.
+- Windows cần driver CP210x (Silicon Labs) để hiện cổng COM.
 - Upload không vào: giữ BOOT, nhấn RST, thả BOOT rồi upload lại.
 
 ## Chạy giả lập QEMU (đã dùng để kiểm thử)

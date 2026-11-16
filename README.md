@@ -16,7 +16,6 @@ RTOS_Project/
 │   ├── src/                      main.cpp, task_io.cpp, task_sensor.cpp, task_display.cpp, task_control.cpp
 │   ├── include/                  config.h (chân, chu kỳ, priority, stack), app.h (đối tượng dùng chung)
 │   ├── docs/                     hình cho report, log chạy QEMU, script vẽ hình
-│   ├── prebuilt/                 firmware ESP32-S3 nạp sẵn ở địa chỉ 0x0
 │   └── diagram.json, wokwi.toml  mô phỏng Wokwi
 ├── 02_Group_HW_AI_Accelerator/   (nhóm) literature → model Python QAT → golden C → spec → RTL → PetaLinux
 └── 03_Reports/
@@ -31,6 +30,6 @@ RTOS_Project/
 
 | Hạng mục | Trạng thái | Cách kiểm tra |
 |---|---|---|
-| Build ESP32-S3 / ESP32 | OK, không cảnh báo (`-Wall`). RAM 6,9 %, Flash 12,4 % (S3) | `pio run -e esp32s3` |
+| Build ESP32 | OK, không cảnh báo (`-Wall`). RAM 6,9 %, Flash 29,1 % | `pio run -e esp32dev` |
 | Chạy giả lập QEMU (ESP32) | OK: 8 task qua điểm hẹn, LED3 sáng đúng 3000 ms, semaphore gộp lần nhấn, báo tối 25/35 %, queue set (lệnh + timer), suspend/resume/prio, log bỏ = 0 | `docs/qemu_log.txt` |
-| Chạy trên kit thật | Chờ chạy: điền cột "Kết quả" Bảng 6 trong report | xem `01_.../README.md` |
+| Chạy trên kit thật (16/11/2026) | 5/7 kịch bản đạt: 8 task, OLED, BTN1/LED2, BTN2/LED3 3000 ms, quang trở báo tối, drop 0 | Bảng 6 report, `docs/evidence/`, `demo/` video |
