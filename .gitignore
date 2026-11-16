@@ -10,4 +10,4 @@ __pycache__/
 *.tmp
 *.bin.bak
 
-.vscode/settings.json
+**/.vscode/settings.json
