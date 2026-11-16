@@ -20,12 +20,12 @@
 // ESP32 DevKit thường (WROOM-32)
 #define PIN_LED1       19
 #define PIN_LED2       18
-#define PIN_LED3        5
+#define PIN_LED3       23
 #define PIN_BTN1        4
 #define PIN_BTN2       13
 #define PIN_LDR        35   // ADC1_CH7, chân chỉ vào
-#define PIN_I2C_SDA    21
-#define PIN_I2C_SCL    22
+#define PIN_I2C_SDA    32
+#define PIN_I2C_SCL    33
 #endif
 
 #define OLED_W        128
@@ -34,7 +34,7 @@
 
 // Module quang trở thường cho AO CAO khi TỐI -> đảo để 100% = sáng nhất.
 // Nếu dùng mạch chia áp tự ráp (LDR lên 3V3, điện trở xuống GND) thì đặt 0.
-#define LDR_INVERT      1
+#define LDR_INVERT      0
 
 // ============ Thời gian (ms) ============
 #define LED1_PERIOD_MS      200   // Task 1: chu kỳ đầy đủ (100 ms sáng + 100 ms tắt)
@@ -43,7 +43,7 @@
 #define BTN_STABLE_COUNT      3   // 3 mẫu liên tiếp giống nhau (30 ms) mới chấp nhận
 #define LED3_ON_MS         3000   // Task 5
 #define OLED_PERIOD_MS      500   // Task 6
-#define STAT_TIMER_MS     10000   // software timer in thống kê hệ thống
+#define STAT_TIMER_MS      2000   // software timer in thống kê hệ thống
 #define ADC_SAMPLES           8   // Task 2 lấy trung bình 8 mẫu
 
 // Ngưỡng báo tối (Task 8), có trễ (hysteresis) để không bật/tắt liên tục quanh ngưỡng

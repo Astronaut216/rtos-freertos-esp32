@@ -1,18 +1,18 @@
-# Project cá nhân (70%) – FreeRTOS trên ESP32-S3
+# Project cá nhân (70%) – FreeRTOS trên ESP32
 
 Sinh viên: **Đặng Đình Mạnh** – MSSV **24119055** · GVHD: Huỳnh Hoàng Hà
 Báo cáo: [`../03_Reports/Report_Project_CaNhan_FreeRTOS_24119055.pdf`](../03_Reports/Report_Project_CaNhan_FreeRTOS_24119055.pdf)
 
 ![Kiến trúc phần mềm](docs/figures/f2_software.png)
 
-## Phần cứng (ESP32-S3 DevKitC-1)
+## Phần cứng (kit chạy thật: ESP32 DevKit WROOM-32, env esp32dev, COM5)
 
 | Linh kiện | ESP32-S3 | ESP32 thường (env esp32dev) |
 |---|---|---|
-| LED1 / LED2 / LED3 (+220 Ω) | GPIO4 / 5 / 6 | GPIO19 / 18 / 5 |
+| LED1 / LED2 / LED3 (+220 Ω) | GPIO4 / 5 / 6 | GPIO19 / 18 / 23 |
 | BTN1 / BTN2 (nối GND, pull-up trong) | GPIO15 / 16 | GPIO4 / 13 |
-| Module cảm biến ánh sáng (AO) | GPIO1 (ADC1_CH0) | GPIO35 |
-| OLED SSD1306 I2C 0x3C | SDA 10, SCL 11 | SDA 21, SCL 22 |
+| Module cảm biến ánh sáng (AO) | GPIO1 (ADC1_CH0) | GPIO35 (quang trở lên 3V3, 10 kΩ xuống GND) |
+| OLED SSD1306 I2C 0x3C | SDA 10, SCL 11 | SDA 32, SCL 33 |
 
 Kit + testboard dùng chung với nhóm (GV cho phép) nên chân giống mạch hiện có, nạp vào là chạy. Đổi chân trong `include/config.h`. Mạch chia áp quang trở tự ráp (LDR lên 3V3) thì đặt `LDR_INVERT 0`.
 
@@ -67,3 +67,9 @@ Kết quả: [`docs/qemu_log.txt`](docs/qemu_log.txt). LED3 sáng đúng 3000 ms
 | 5 | Che quang trở | % giảm; dưới 25 % OLED hiện [TOI] | |
 | 6 | `s 1` rồi `r 1` | LED1 dừng rồi nháy lại | |
 | 7 | `stat` sau 10 phút | stack còn dư, log bỏ = 0 | |
+
+## Chạy thực nghiệm trên kit (16/11/2026)
+
+Nạp qua COM5 (CP2102), Serial Monitor 115200. Đạt: khởi động 8 task + điểm hẹn, OLED 0x3C, BTN1 đảo LED2, BTN2 → semaphore → LED3 sáng đúng 3000 ms (token được giữ), che quang trở → 0 % → Task 8 báo tối rồi hết tối, heap ổn định, drop 0. Ảnh terminal và ảnh trích video ở `docs/evidence/`.
+
+Video chạy thực nghiệm mạch thật: `demo/Demo_ThucNghiem_FreeRTOS_ESP32_16-11-2026.mp4` (ở thư mục gốc repo).

@@ -183,7 +183,12 @@ void task7_control(void *pv) {
     } else if (who == (QueueSetMemberHandle_t)g_statSem) {
       xSemaphoreTake(g_statSem, 0);
       uint32_t upS = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS / 1000);
-      app_log("[STAT] up %lus heap %lu min %lu drop %lu", (unsigned long)upS,
+      uint8_t lp = 0; uint32_t lmv = 0;
+      if (xSemaphoreTake(g_lightMutex, pdMS_TO_TICKS(20)) == pdTRUE) {   // [K6] doc ban sao nhat quan
+        lp = g_light.lightPct; lmv = g_light.mv; xSemaphoreGive(g_lightMutex);
+      }
+      app_log("[STAT] up %lus anh sang %u%% (%lumV) heap %lu min %lu drop %lu", (unsigned long)upS,
+              (unsigned)lp, (unsigned long)lmv,
               (unsigned long)esp_get_free_heap_size(),
               (unsigned long)esp_get_minimum_free_heap_size(), (unsigned long)g_logDropped);
     }
